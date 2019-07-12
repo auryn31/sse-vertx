@@ -1,6 +1,7 @@
 package com.example.reactive.reactive_vertx
 
 import com.example.reactive.reactive_vertx.handler.SseCarResponseHandler
+import com.example.reactive.reactive_vertx.handler.TimeHandler
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
 import io.vertx.ext.web.Router
@@ -22,6 +23,13 @@ class MainVerticle : AbstractVerticle() {
       .failureHandler {
         println("car error asynchron response\n")
         it.response().end("car error asynchron response\n")
+      }
+
+    router.route("/time")
+      .handler(TimeHandler())
+      .failureHandler {
+        println("car error asynchron response\n")
+        it.response().end("time error asynchron response\n")
       }
 
     server.requestHandler(router).listen(8080) { http ->

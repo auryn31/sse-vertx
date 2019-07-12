@@ -1,15 +1,12 @@
 package com.example.reactive.reactive_vertx.handler
 
-import com.beust.klaxon.Klaxon
-import com.example.reactive.reactive_vertx.TIMEOUT
 import com.example.reactive.reactive_vertx.model.SseModel
-import com.example.reactive.service.DataService
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import com.example.reactive.reactive_vertx.service.TimeProducer
+import io.reactivex.Scheduler
 import io.vertx.core.Handler
 import io.vertx.ext.web.RoutingContext
 
-class SseCarResponseHandler : Handler<RoutingContext> {
+class TimeHandler : Handler<RoutingContext> {
 
   override fun handle(rtx: RoutingContext) {
     val response = rtx.response()
@@ -21,14 +18,16 @@ class SseCarResponseHandler : Handler<RoutingContext> {
     response.headers().add("Access-Control-Allow-Origin", "*")
 
 
-    val flow: Flowable<String> = DataService.getDataStream(TIMEOUT).map { Klaxon().toJsonString(it) }.toFlowable(BackpressureStrategy.BUFFER)
+    val flow = TimeProducer.instance.obs
 
     flow.subscribe({
-      response.write(SseModel(data = it, event = "newCar").toString())
+      println("the current time is $it called from ${rtx.request().remoteAddress()}")
+      response.write(SseModel(data = "the current time is $it", event = "time").toString())
     }, ::println, {
-      response.write(SseModel(event = "done").toString())
       response.end()
     })
+
+
   }
 
 }
