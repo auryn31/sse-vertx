@@ -20,13 +20,15 @@ class TimeHandler : Handler<RoutingContext> {
 
     val flow = TimeProducer.instance.obs
 
-    flow.subscribe({
-      println("the current time is $it called from ${rtx.request().remoteAddress()}")
+    val disposal = flow.subscribe({
       response.write(SseModel(data = "the current time is $it", event = "time").toString())
     }, ::println, {
       response.end()
     })
 
+    response.closeHandler{
+      disposal.dispose()
+    }
 
   }
 

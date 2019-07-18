@@ -23,12 +23,18 @@ class SseCarResponseHandler : Handler<RoutingContext> {
 
     val flow: Flowable<String> = DataService.getDataStream(TIMEOUT).map { Klaxon().toJsonString(it) }.toFlowable(BackpressureStrategy.BUFFER)
 
-    flow.subscribe({
+    val disposal = flow.subscribe({
       response.write(SseModel(data = it, event = "newCar").toString())
+
     }, ::println, {
       response.write(SseModel(event = "done").toString())
       response.end()
     })
+
+    response.closeHandler{
+      disposal.dispose()
+    }
+
   }
 
 }

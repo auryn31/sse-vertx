@@ -5,6 +5,7 @@ import com.example.reactive.reactive_vertx.handler.TimeHandler
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
 import io.vertx.ext.web.Router
+import io.vertx.ext.web.handler.StaticHandler
 
 const val TIMEOUT = 10L
 
@@ -17,6 +18,13 @@ class MainVerticle : AbstractVerticle() {
     val server = vertx.createHttpServer()
 
     val router = Router.router(vertx)
+
+    router.route()
+      .handler(StaticHandler.create())
+      .failureHandler {
+        println("fooo cannot find this shit\n")
+        it.response().end("time error asynchron response\n")
+      }
 
     router.route("/sse")
       .handler(SseCarResponseHandler())

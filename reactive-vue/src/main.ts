@@ -9,7 +9,6 @@ import "vuetify/dist/vuetify.css";
 
 import Config from "./config.json";
 
-import * as Store from "./store";
 import { store } from "./store";
 
 import router from "./router";
@@ -37,16 +36,10 @@ Vue.use(Vuetify);
 class App extends Vue {
   mounted () {
     Logger.log("mounted");
-
-    const loaderVisible = Store.readLoaderVisibility(this.$store);
-    Logger.info("loader is visible: ", loaderVisible);
   }
 }
 
 window.onerror = function (errorMsg, url, lineNo, colNo, error) {
-  Logger.error("Global event: ", errorMsg);
-
-  Store.commitLoaderVisibility(store, false);
 };
 
 export const app = new App().$mount("#app");
