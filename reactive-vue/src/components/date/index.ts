@@ -8,7 +8,7 @@ import {
 } from "../../store";
 import {
   readDate,
-  readCarsCounter, 
+  readCarsCounter,
   readCarsFromSse
 } from "../../store/store";
 import Timeloader from "../../services/timeloader";
@@ -19,15 +19,10 @@ import Timeloader from "../../services/timeloader";
 })
 export default class DateVue extends Vue {
   cars = readCarsFromSse(store);
-  date = ""
-  testString = 1
+  date = readDate(store);
+  testString = readCarsCounter(store);
+
   mounted() {
     Timeloader.loadTime();
-  }
-  
-  computed() {
-    this.date = readDate(store);
-    this.testString = readCarsCounter(store);
-
   }
 }

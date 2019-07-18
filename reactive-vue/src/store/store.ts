@@ -3,7 +3,7 @@ import * as Vuex from "vuex";
 import { getStoreAccessors } from "vuex-typescript";
 import { State } from "./state";
 import Car from "../models/car";
-import moment, { Moment } from "moment";
+import { Moment } from "moment";
 
 Vue.use(Vuex);
 
@@ -21,7 +21,7 @@ const getters = {
   },
   getDate(state: State) {
     return state.date;
-  }, 
+  },
   getCarsCounter(state: State) {
     return state.carsCounter;
   }
@@ -29,10 +29,11 @@ const getters = {
 
 const mutations = {
   addCar(state: State, car: Car) {
-    state.carsCounter += 1
+    state.carsCounter++;
     state.cars.push(car);
   },
   setDate(state: State, date: Moment) {
+
     state.date = date.format("dd-MM-YYYY hh:mm:ss");
   }
 };
