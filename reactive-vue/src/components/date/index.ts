@@ -4,25 +4,25 @@ import {
 } from "vue-property-decorator";
 import template from "./date.vue";
 import {
-  store
+  store, DateString
 } from "../../store";
 import {
   readDate,
-  readCarsCounter,
   readCarsFromSse
 } from "../../store/store";
 import Timeloader from "../../services/timeloader";
 
 @Component({
   mixins: [template],
+  store,
   components: {}
 })
 export default class DateVue extends Vue {
+  date: DateString = readDate(this.$store);
   cars = readCarsFromSse(store);
-  date = readDate(store);
-  testString = readCarsCounter(store);
 
   mounted() {
     Timeloader.loadTime();
   }
+
 }

@@ -11,8 +11,7 @@ type Context = Vuex.ActionContext<State, State>;
 
 const state: State = {
   cars: [],
-  date: "false",
-  carsCounter: 0
+  date: {date: "Server Date"}
 };
 
 const getters = {
@@ -21,20 +20,15 @@ const getters = {
   },
   getDate(state: State) {
     return state.date;
-  },
-  getCarsCounter(state: State) {
-    return state.carsCounter;
   }
 };
 
 const mutations = {
   addCar(state: State, car: Car) {
-    state.carsCounter++;
     state.cars.push(car);
   },
   setDate(state: State, date: Moment) {
-
-    state.date = date.format("dd-MM-YYYY hh:mm:ss");
+    state.date.date = date.format("dd-MM-YYYY hh:mm:ss");
   }
 };
 
@@ -55,7 +49,6 @@ const { read, commit, dispatch } = getStoreAccessors<State, State>("");
 /*************************************************/
 export const readCarsFromSse = read(getters.getCars);
 export const readDate = read(getters.getDate);
-export const readCarsCounter = read(getters.getCarsCounter);
 
 /*************************************************/
 /* MUTATIONS */

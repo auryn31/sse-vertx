@@ -2,7 +2,6 @@ package com.example.reactive.reactive_vertx.handler
 
 import com.example.reactive.reactive_vertx.model.SseModel
 import com.example.reactive.reactive_vertx.service.TimeProducer
-import io.reactivex.Scheduler
 import io.vertx.core.Handler
 import io.vertx.ext.web.RoutingContext
 

@@ -7,7 +7,7 @@ import io.vertx.core.Future
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.StaticHandler
 
-const val TIMEOUT = 10L
+const val TIMEOUT = 1000L
 
 class MainVerticle : AbstractVerticle() {
 
@@ -36,7 +36,7 @@ class MainVerticle : AbstractVerticle() {
     router.route("/time")
       .handler(TimeHandler())
       .failureHandler {
-        println("car error asynchron response\n")
+        println("time error asynchron response\n")
         it.response().end("time error asynchron response\n")
       }
 

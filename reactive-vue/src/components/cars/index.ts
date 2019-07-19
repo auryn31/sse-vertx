@@ -20,6 +20,7 @@ export default class Cars extends Vue {
   msg: string = "List of Cars";
   loading_text: string = "Load Cars";
   carsSse: Array < Car > = readCarsFromSse(store);
+
   loadcars(): void {
     Carloader.loadCarsFromServerEvent();
   }
