@@ -106,3 +106,5 @@ data: the current time is 2019-07-19T11:15:38.311260
 ```
 
 Thanks for reading the article, I hope you can create SSE endpoints with `vert.x` and `Kotlin` quickly and easily. If you liked the article, leave me some applause.
+
+Link to [medium](https://medium.com/@aengel/howto-server-sent-events-with-vert-x-76750575a142).
