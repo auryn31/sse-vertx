@@ -1,10 +1,10 @@
 # Server Sent Events with vert.x
 
-In [the](https://medium.com/@aengel/server-sent-events-vs-json-stream-3a9f472120a4) article I compared Server-Sent Events (SSE) with Json-Stream. Now I want to show you how to easily develop an SSE endpoint with board resources from `vert.x`.
+In [dem](https://medium.com/@aengel/server-sent-events-vs-json-stream-3a9f472120a4) Beitrag verglich ich Server-Sent Events (SSE) mit Json-Stream. Nun will ich dir zeigen, wie du ganz einfach mit Boardmitteln von vert.x, einen SSE-Endpunkt entwickelst.
 
-In the first step we create a model, which has the structure of SSE and provides the data later.
+Im ersten Schritt erstellen wir uns ein Model, welches die Struktur von SSE hat und die Daten später bereitstellt.
 
-We overwrite the `toString` method to get the structure of an SSE.
+Die `toString` Methode überschreiben wir, um später die Struktur eines SSE zu bekommen.
 
 ```kotlin
 data class SseModel(val event: String? = null, val data: String = "", val id: String? = null, val retry: Number? = null) {
@@ -23,23 +23,21 @@ data class SseModel(val event: String? = null, val data: String = "", val id: St
 }
 ```
 
-To send data to the client, we create a producer. Here we will create a shared observable, which simply sends a timestamp to all registered observables every second.
+Um Daten an den Client zu senden, erstellen wir uns einen Producer. Hier werden wir ein Shared-Observable erstellen, was einfach jede Sekunde einen Timestamp an alle registierten Observables sendet.
 
 ```kotlin
 class TimeProducer {
 
-  // create singleton
   companion object {
     val instance = TimeProducer()
   }
 
-  // create public observable
   val obs = Observable.interval(1, TimeUnit.SECONDS)
     .map { LocalDateTime.now() }.share()
 }
 ```
 
-In the third step we create a response handler, which registers itself on the observable and sends the data to the client.
+Im dritten Schritt erstellen wir uns einen Response-Handler, welcher sich auf das Observable registriert und die Daten an den Client sendet.
 
 ```kotlin
 class TimeHandler : Handler<RoutingContext> {
@@ -48,7 +46,6 @@ class TimeHandler : Handler<RoutingContext> {
     val response = rtx.response()
     response.setChunked(true)
 
-    // set headers
     response.headers().add("Content-Type", "text/event-stream;charset=UTF-8")
     response.headers().add("Connection", "keep-alive")
     response.headers().add("Cache-Control", "no-cache")
@@ -56,14 +53,12 @@ class TimeHandler : Handler<RoutingContext> {
 
     val flow = TimeProducer.instance.obs
 
-    // subscribe to the public timer observable
     val disposal = flow.subscribe({
       response.write(SseModel(data = "the current time is $it", event = "time").toString())
     }, ::println, {
       response.end()
     })
 
-    // stop observing it the pipe is broken
     response.closeHandler{
       disposal.dispose()
     }
@@ -72,21 +67,22 @@ class TimeHandler : Handler<RoutingContext> {
 }
 ```
 
-In the last step we register another route and can then use the SSE endpoint.
+Im letzten Schritt gegistrieren wir noch eine Route und können dann den SSE Endpunkt verwenden.
 
 ```kotlin
 router.route("/time")
     .handler(TimeHandler())
     .failureHandler {
+        println("car error asynchron response\n")
         it.response().end("time error asynchron response\n")
     }
 ```
 
-Now we can address the endpoint and get an infinite SSE response with the time stamp of the server.
+Nun können wir auch schon den Endpunkt ansprechen und bekommen einen unendlichen SSE response mit dem Zeitstempel des Servers.
 
 `curl localhost:8080/time`
 
-The response is as follows:
+Die Antwort sieht dann folgendermaßen aus:
 
 ```bash
 event: time
@@ -105,4 +101,4 @@ event: time
 data: the current time is 2019-07-19T11:15:38.311260
 ```
 
-Thanks for reading the article, I hope you can create SSE endpoints with `vert.x` and `Kotlin` quickly and easily. If you liked the article, leave me some applause.
+Vielen Dank fürs lesen des Artikels, ich hoffe du kannst damit schnell und einfach SSE-Endpunkte mit `vert.x` und `Kotlin` erstellen. Hat dir der Artikel gefallen, lass mir gern Applaus da.
