@@ -11,7 +11,7 @@ type Context = Vuex.ActionContext<State, State>;
 
 const state: State = {
   cars: [],
-  date: {date: "Server Date"}
+  date: "Server Date"
 };
 
 const getters = {
@@ -28,7 +28,7 @@ const mutations = {
     state.cars.push(car);
   },
   setDate(state: State, date: Moment) {
-    state.date.date = date.format("dd-MM-YYYY hh:mm:ss");
+    state.date = date.format("dd-MM-YYYY hh:mm:ss");
   }
 };
 

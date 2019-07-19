@@ -4,7 +4,7 @@ import {
 } from "vue-property-decorator";
 import template from "./date.vue";
 import {
-  store, DateString
+  store
 } from "../../store";
 import {
   readDate,
@@ -18,8 +18,12 @@ import Timeloader from "../../services/timeloader";
   components: {}
 })
 export default class DateVue extends Vue {
-  date: DateString = readDate(this.$store);
+
   cars = readCarsFromSse(store);
+
+  get date() {
+    return readDate(store);
+  }
 
   mounted() {
     Timeloader.loadTime();

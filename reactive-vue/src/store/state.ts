@@ -1,10 +1,6 @@
 import Car from "../models/car";
 
 export interface State {
-  date: DateString,
+  date: string,
   cars: Array<Car>
-}
-
-export interface DateString {
-  date: string
 }
